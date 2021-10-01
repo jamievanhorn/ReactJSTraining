@@ -9,6 +9,7 @@ import DisplayBalances from './Components/DisplayBalances';
 import { useState, useEffect } from 'react';
 import EntryLines from './Components/EntryLines';
 import ModalEdit from './Components/ModalEdit';
+import {useSelector} from 'react-redux';
 
 
 function App() {
@@ -16,12 +17,11 @@ function App() {
   const [description, setDescription] = useState('');
   const [value, setValue] = useState('');
   const [isExpense, setIsExpense] = useState(true);
-  const [entries, setEntires] = useState(initialEntries)
   const [entryId, setEntryId] = useState();
   const [incomeTotal, setIncomeTotal] = useState(0);
   const [expenseTotal, setExpenseTotal] = useState(0);
   const [total, setTotal] = useState(0);
-
+  const entries = useSelector((state )=> state.entries);
 
   useEffect(() => {
     if (!isOpen && entryId) {
@@ -30,7 +30,7 @@ function App() {
       newEntries[index].description = description;
       newEntries[index].value = value;
       newEntries[index].isExpense = isExpense;
-      setEntires(newEntries);
+      //setEntires(newEntries);
       resetEntry();
     }
   }, [isOpen]);
@@ -46,12 +46,6 @@ function App() {
     setExpenseTotal(expenseTotal);
     setIncomeTotal(incomeTotal);
   }, entries);
-
-
-  function deleteEntry(id) {
-    const result = entries.filter(entry => entry.id !== id);
-    setEntires(result);
-  }
 
   function editEntry(id) {
     if (id) {
@@ -74,7 +68,7 @@ function addEntry() {
     });
     console.log('result', result);
     console.log('entries', entries);
-    setEntires(result);
+    //setEntires(result);
     resetEntry();
   }
 
@@ -91,7 +85,7 @@ function addEntry() {
       <DisplayBalances incomeTotal={incomeTotal} expenseTotal={expenseTotal} />
 
       <MainHeader title='History' type='h3' />
-      <EntryLines entries={entries} deleteEntry={deleteEntry} setIsOpen={isOpen} editEntry={editEntry} />
+      <EntryLines entries={entries} setIsOpen={isOpen} editEntry={editEntry} />
 
       <MainHeader title='Add new transaction' type='h3' />
       <NewEntryForm
@@ -116,27 +110,3 @@ function addEntry() {
 }
 
 export default App;
-var initialEntries = [{
-  id: 1,
-  description: 'Work Income',
-  value: 1000.00,
-  isExpense: false
-},
-{
-  id: 2,
-  description: 'Water bill',
-  value: 20.00,
-  isExpense: true
-},
-{
-  id: 3,
-  description: 'Rent',
-  value: 300.00,
-  isExpense: true
-},
-{
-  id: 4,
-  description: 'Power bill',
-  value: 50.00,
-  isExpense: true
-}]
